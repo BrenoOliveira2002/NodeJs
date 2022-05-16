@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/BrenoOliveira2002/NodeJs#readme",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "c": "^1.1.1",
     "consign": "^0.1.6",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "nedb": "^1.8.0"
   }
 }

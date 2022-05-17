@@ -1,41 +1,50 @@
 let NeDB = require('nedb');
 let db = new NeDB({
-    filename:'users.db',
-    autoload: 'true.'
-})
-module.exports  = (app) => {
-
-
-app.get('/users', (req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json')
-    res.json({
-        users:[{
-            name: 'Breno',
-            email: 'breno_2002_@outlook.com',
-            id: 1
-        }]
-    });
-
+    filename: 'users.db',
+    autoload: true
 });
 
-app.post('/users', (req, res) => {
+module.exports = (app) => {
 
-    db.insert(req.body, (err, user) =>{
+    let route = app.route('/user');
 
-        if (err ) {
-            console.log('error: ${err}');
-            res.status(400).json({
-                error: err
+    app.get('/users', (req, res) => {
 
-            });
-        }
-        else {
+        db.find({}).sort({ name: 1 }).exec((err, users) => {
 
-            res.status(200).json(user);
-        }
-    })
-})
+            if (err) {
+                app.utils.error.send(err, req, res);
+            } else {
 
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({
+                    users
+                });
+                
+            }
 
-}
+        });
+
+    });
+
+    app.post('/users', (req, res) => {
+
+        db.insert(req.body, (err, user) => {
+
+            if (err) {
+                console.log(`erro: ${err}`);
+                res.status(400).json({
+                    error: err
+                });
+            } else {
+                
+                res.status(200).json(user);
+
+            }
+
+        });
+
+    });
+
+};

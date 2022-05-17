@@ -28,15 +28,12 @@ module.exports = (app) => {
 
     });
 
-    app.post('/users', (req, res) => {
+    route.post((req, res) => {
 
         db.insert(req.body, (err, user) => {
 
             if (err) {
-                console.log(`erro: ${err}`);
-                res.status(400).json({
-                    error: err
-                });
+                app.utils.error.send(err, req, res);
             } else {
                 
                 res.status(200).json(user);
@@ -46,5 +43,22 @@ module.exports = (app) => {
         });
 
     });
+
+    let routeId = app.route('/users/:id');
+
+    routeId.get((req, res) => {
+
+        db.findOne({ _id: req.params.id }).exec((err, user) => {
+
+            if (err) {
+                app.utils.error.send(err, req, res);
+            } else {
+                res.status(200).json(user);
+            }
+
+        });
+
+    });
+
 
 };
